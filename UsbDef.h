@@ -117,6 +117,7 @@ extern "C" {
 #define USB_DESCR_TYP_QUALIF    0x06
 #define USB_DESCR_TYP_SPEED     0x07
 #define USB_DESCR_TYP_OTG       0x09
+#define USB_DESCR_TYP_BOS       0x0f
 #define USB_DESCR_TYP_HID       0x21
 #define USB_DESCR_TYP_REPORT    0x22
 #define USB_DESCR_TYP_PHYSIC    0x23

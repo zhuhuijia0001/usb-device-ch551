@@ -81,6 +81,7 @@ void InitSystem(void)
 
 void ProcessUartData(void)
 {
+#ifdef DEBUG
 	if (CheckEnumerationStatus())
 	{
 		P1_6 = 1;
@@ -89,7 +90,8 @@ void ProcessUartData(void)
 	{
 		P1_6 = 0;
 	}
-	
+#endif
+
 	if (CheckRecvBuffer())
 	{
 		UINT8 *packet = GetOutputBuffer();
