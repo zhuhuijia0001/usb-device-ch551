@@ -3,11 +3,13 @@
 #define _PROTOCOL_H_
 
 //packet id
-#define ID_KEYBOARD   0xA0
-#define ID_MOUSE      0xA1
-#define ID_LED_STATUS 0xA2
-#define ID_QUERY_ONLINE 0xA3
-#define ID_SWITCH     0xA4
+#define ID_USB_KEYBOARD   0xA0
+#define ID_USB_MOUSE      0xA1
+#define ID_PS2_KEYBOARD   0xA2
+#define ID_PS2_MOUSE      0xA3
+#define ID_LED_STATUS     0xA4
+#define ID_QUERY_ONLINE   0xA5
+#define ID_SWITCH         0xA6
 
 //data length
 #define KEYBOARD_LEN  8

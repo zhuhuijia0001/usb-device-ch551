@@ -233,7 +233,8 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
 						break;
 						
 					case HID_SET_IDLE:
-						break;	
+						break;	
+
 						
 					case HID_SET_PROTOCOL:
 						break;
@@ -251,13 +252,13 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                         switch(UsbSetupBuf->wValueH)
                         {
                         case USB_DESCR_TYP_DEVICE:                          //…Ë±∏√Ë ˆ∑˚
-                            pDescr = DevDesc;                               //∞—…Ë±∏√Ë ˆ∑˚ÀÕµΩ“™∑¢ÀÕµƒª∫≥Â«¯
-                            len = sizeof(DevDesc);
+                            pDescr = DevDesc.descr;                               //∞—…Ë±∏√Ë ˆ∑˚ÀÕµΩ“™∑¢ÀÕµƒª∫≥Â«¯
+                            len = DevDesc.size;
                             break;
                             
                         case USB_DESCR_TYP_CONFIG:                          //≈‰÷√√Ë ˆ∑˚
-                            pDescr = CfgDesc;                               //∞—…Ë±∏√Ë ˆ∑˚ÀÕµΩ“™∑¢ÀÕµƒª∫≥Â«¯
-                            len = sizeof(CfgDesc);
+                            pDescr = CfgDesc.descr;                               //∞—…Ë±∏√Ë ˆ∑˚ÀÕµΩ“™∑¢ÀÕµƒª∫≥Â«¯
+                            len = CfgDesc.size;
                             break;
                         	
                         case USB_DESCR_TYP_STRING:
@@ -268,13 +269,13 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                         case USB_DESCR_TYP_REPORT:                          //±®±Ì√Ë ˆ∑˚
                             if(UsbSetupBuf->wIndexL == 0)                   //Ω”ø⁄0±®±Ì√Ë ˆ∑˚
                             {
-                                pDescr = KeyRepDesc;                        // ˝æ›◊º±∏…œ¥´
-                                len = sizeof(KeyRepDesc);
+                                pDescr = KeyRepDesc.descr;                        // ˝æ›◊º±∏…œ¥´
+                                len = KeyRepDesc.size;
                             }
                             else if(UsbSetupBuf->wIndexL == 1)              //Ω”ø⁄1±®±Ì√Ë ˆ∑˚
                             {
-                                pDescr = MouseRepDesc;                      // ˝æ›◊º±∏…œ¥´
-                                len = sizeof(MouseRepDesc);
+                                pDescr = MouseRepDesc.descr;                      // ˝æ›◊º±∏…œ¥´
+                                len = MouseRepDesc.size;
                                 Ready = TRUE;                                  //»Áπ˚”–∏¸∂‡Ω”ø⁄£¨∏√±Í◊ºŒª”¶∏√‘⁄◊Ó∫Û“ª∏ˆΩ”ø⁄≈‰÷√ÕÍ≥…∫Û”––ß
                             }
                             else
@@ -356,7 +357,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                         {
                             if( ( ( ( UINT16 )UsbSetupBuf->wValueH << 8 ) | UsbSetupBuf->wValueL ) == 0x01 )
                             {
-                                if( CfgDesc[ 7 ] & 0x20 )
+                                if( CfgDesc.descr[ 7 ] & 0x20 )
                                 {
                                     /* …Ë÷√ªΩ–— πƒ‹±Í÷æ */
                                 }

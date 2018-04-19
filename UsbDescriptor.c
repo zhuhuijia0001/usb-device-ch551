@@ -3,7 +3,7 @@
 #include "UsbDescriptor.h"
 
 /* device descriptor */
-UINT8C DevDesc[DEV_DESCR_SIZE] = 
+static UINT8C _DevDesc[] = 
 {
 	0x12,                 /*bLength */
 	USB_DESCR_TYP_DEVICE, /*bDescriptorType*/
@@ -24,8 +24,113 @@ UINT8C DevDesc[DEV_DESCR_SIZE] =
     0x01                  /*bNumConfigurations*/
 };
 
+/* device descriptor */
+const DescriptorData DevDesc = 
+{
+    _DevDesc,
+
+    sizeof(_DevDesc)
+};
+
+/* keyboard report descriptor */
+static UINT8C _KeyRepDesc[] =
+{
+	0x05, 0x01,         /*  Usage Page (Desktop),               */
+	0x09, 0x06,         /*  Usage (Keyboard),                   */
+	0xA1, 0x01,         /*  Collection (Application),           */
+	0x05, 0x07,         /*      Usage Page (Keyboard),          */
+	0x19, 0xE0,         /*      Usage Minimum (KB Leftcontrol), */
+	0x29, 0xE7,         /*      Usage Maximum (KB Right GUI),   */
+	0x15, 0x00,         /*      Logical Minimum (0),            */
+	0x25, 0x01,         /*      Logical Maximum (1),            */
+	0x75, 0x01,         /*      Report Size (1),                */
+	0x95, 0x08,         /*      Report Count (8),               */
+	0x81, 0x02,         /*      Input (Variable),               */
+	0x95, 0x01,         /*      Report Count (1),               */
+	0x75, 0x08,         /*      Report Size (8),                */
+	0x81, 0x01,         /*      Input (Constant),               */
+	0x95, 0x03,         /*      Report Count (3),               */
+	0x75, 0x01,         /*      Report Size (1),                */
+	0x05, 0x08,         /*      Usage Page (LED),               */
+	0x19, 0x01,         /*      Usage Minimum (01h),            */
+	0x29, 0x03,         /*      Usage Maximum (03h),            */
+	0x91, 0x02,         /*      Output (Variable),              */
+	0x95, 0x05,         /*      Report Count (5),               */
+	0x75, 0x01,         /*      Report Size (1),                */
+	0x91, 0x01,         /*      Output (Constant),              */
+	0x95, 0x06,         /*      Report Count (6),               */
+	0x75, 0x08,         /*      Report Size (8),                */
+	0x26, 0xFF, 0x00,   /*      Logical Maximum (255),          */
+	0x05, 0x07,         /*      Usage Page (Keyboard),          */
+	0x19, 0x00,         /*      Usage Minimum (None),           */
+	0x29, 0x91,         /*      Usage Maximum (KB LANG2),       */
+	0x81, 0x00,         /*      Input,                          */
+	0xC0                /*  End Collection                      */
+};
+
+
+/* keyboard report descriptor */
+const DescriptorData KeyRepDesc = 
+{
+    _KeyRepDesc,
+
+    sizeof(_KeyRepDesc)
+};
+
+/* mouse report descriptor */
+static UINT8C _MouseRepDesc[] =
+{
+	0x05, 0x01, /*  Usage Page (Desktop),               */
+	0x09, 0x02, /*  Usage (Mouse),                      */
+	0xA1, 0x01, /*  Collection (Application),           */
+	0x09, 0x01, /*      Usage (Pointer),                */
+	0xA1, 0x00, /*      Collection (Physical),          */
+	0x05, 0x09, /*          Usage Page (Button),        */
+	0x19, 0x01, /*          Usage Minimum (01h),        */
+	0x29, 0x03, /*          Usage Maximum (03h),        */
+	0x15, 0x00, /*          Logical Minimum (0),        */
+	0x25, 0x01, /*          Logical Maximum (1),        */
+	0x75, 0x01, /*          Report Size (1),            */
+	0x95, 0x03, /*          Report Count (3),           */
+	0x81, 0x02, /*          Input (Variable),           */
+	0x75, 0x05, /*          Report Size (5),            */
+	0x95, 0x01, /*          Report Count (1),           */
+	0x81, 0x01, /*          Input (Constant),           */
+	0x05, 0x01, /*          Usage Page (Desktop),       */
+	0x09, 0x30, /*          Usage (X),                  */
+	0x09, 0x31, /*          Usage (Y),                  */
+	0x09, 0x38, /*          Usage (Wheel),              */
+	0x15, 0x81, /*          Logical Minimum (-127),     */
+	0x25, 0x7F, /*          Logical Maximum (127),      */
+	0x75, 0x08, /*          Report Size (8),            */
+	0x95, 0x03, /*          Report Count (3),           */
+	0x81, 0x06, /*          Input (Variable, Relative), */
+	0xC0,       /*      End Collection,                 */
+	0xC0        /*  End Collection                      */
+};
+
+/* mouse report descriptor */
+const DescriptorData MouseRepDesc	=
+{
+    _MouseRepDesc,
+
+    sizeof(_MouseRepDesc)
+};
+
+#define TOTAL_CONFIG_DESCR_SIZE     sizeof(USB_CFG_DESCR) + \
+									sizeof(USB_ITF_DESCR) + \
+									sizeof(USB_HID_DESCR) + \
+									sizeof(USB_ENDP_DESCR) + \
+									sizeof(USB_ITF_DESCR) + \
+									sizeof(USB_HID_DESCR) + \
+									sizeof(USB_ENDP_DESCR)
+									
+#define KEYBOARD_REPORT_DESCR_SIZE  sizeof(_KeyRepDesc)
+
+#define MOUSE_REPORT_DESCR_SIZE     sizeof(_MouseRepDesc)
+
 /* configuration descriptor */
-UINT8C CfgDesc[TOTAL_CONFIG_DESCR_SIZE] =
+static UINT8C _CfgDesc[] =
 {
     0x09,                 /* bLength: Configuation Descriptor size */
     USB_DESCR_TYP_CONFIG, /* bDescriptorType: Configuration */
@@ -94,96 +199,28 @@ UINT8C CfgDesc[TOTAL_CONFIG_DESCR_SIZE] =
     0x0a                 /*bInterval: Polling Interval (10 ms)*/
 };
 
-/* keyboard report descriptor */
-UINT8C KeyRepDesc[KEYBOARD_REPORT_DESCR_SIZE] =
+/* configure descriptor */
+const DescriptorData CfgDesc = 
 {
-    0x05, 0x01,
-    0x09, 0x06,
+    _CfgDesc,
 
-    0xA1, 0x01,
-    0x05, 0x07,
-    
-    0x19, 0xe0,
-    0x29, 0xe7,
-    0x15, 0x00,
-    0x25, 0x01,
-    
-    0x75, 0x01,
-    0x95, 0x08,
-    0x81, 0x02,
-
-    0x95, 0x01,
-    0x75, 0x08,
-    0x81, 0x01,
-
-    0x95, 0x03,
-    0x75, 0x01,
-    0x05, 0x08,
-    0x19, 0x01,
-    0x29, 0x03,
-    0x91, 0x02,
-    
-    0x95, 0x05,
-    0x75, 0x01,
-    0x91, 0x01,
-
-    0x95, 0x06,
-    0x75, 0x08,
-    0x26, 0xff, 0x00,
-    0x05, 0x07,
-    0x19, 0x00,
-    0x29, 0x91,
-    0x81, 0x00,
-
-    0xC0
+    sizeof(_CfgDesc)
 };
 
-/* mouse report descriptor */
-UINT8C MouseRepDesc[MOUSE_REPORT_DESCR_SIZE] =
-{
-    0x05, 0x01,
+#define STRING_LANGID_SIZE          4
+#define STRING_VENDOR_SIZE          12
+#define STRING_PRODUCT_SIZE         22
+#define STRING_SERIAL_SIZE          18
 
-    0x09, 0x02,
 
-    0xA1, 0x01,
-    0x09, 0x01,
-    0xA1, 0x00,
-    0x05, 0x09,
-    0x19, 0x01,
-    0x29, 0x03,
-    0x15, 0x00,
-    0x25, 0x01,
-
-    0x75, 0x01,
-    0x95, 0x03,
-    0x81, 0x02,
-
-    0x75, 0x05,
-    0x95, 0x01,
-    0x81, 0x01,
-    
-    0x05, 0x01,
-    0x09, 0x30,
-    0x09, 0x31,
-    0x09, 0x38,
-    0x15, 0x81, 
-    0x25, 0x7f,
-    0x75, 0x08,
-    0x95, 0x03,
-    0x81, 0x06,
-
-    0xC0,
-    0xC0
-};
-
-UINT8C StringLangID[STRING_LANGID_SIZE] = 
+static UINT8C StringLangID[STRING_LANGID_SIZE] = 
 {
 	STRING_LANGID_SIZE,
 	USB_DESCR_TYP_STRING,
 	0x09, 0x04
 };
 
-UINT8C StringVecdor[STRING_VENDOR_SIZE] = 
+static UINT8C StringVecdor[STRING_VENDOR_SIZE] = 
 {
 	STRING_VENDOR_SIZE,
 	USB_DESCR_TYP_STRING,
@@ -196,7 +233,7 @@ UINT8C StringVecdor[STRING_VENDOR_SIZE] =
 	'e', 0
 };
 
-UINT8C StringProduct[STRING_PRODUCT_SIZE] = 
+static UINT8C StringProduct[STRING_PRODUCT_SIZE] = 
 {
 	STRING_PRODUCT_SIZE,
 	USB_DESCR_TYP_STRING,
@@ -230,12 +267,11 @@ UINT8X StringSerial[STRING_SERIAL_SIZE] =
 	'0', 0
 };
 
-DescriptorData StringDescriptors[4] = 
+const DescriptorData StringDescriptors[4] = 
 {
 	{ StringLangID, sizeof(StringLangID) },
 	{ StringVecdor, sizeof(StringVecdor) },
 	{ StringProduct, sizeof(StringProduct) },
 	{ StringSerial, sizeof(StringSerial) }
 };
-
 

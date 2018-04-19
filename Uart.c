@@ -24,7 +24,7 @@ void CH554UART0Alter()
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void InitUART0( )
+void InitUART0()
 {
     UINT32 x;
     UINT8 x2; 
@@ -84,8 +84,8 @@ void SetUart0Sent(void)
 *******************************************************************************/
 void CH554UART0SendByte(UINT8 SendDat)
 {
-	SBUF = SendDat;
 	s_sent = FALSE;
+	SBUF = SendDat;
 	while (!s_sent);
 }
 

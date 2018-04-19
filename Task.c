@@ -101,7 +101,7 @@ void ProcessUartData(void)
 
 		switch (id)
 		{
-		case ID_KEYBOARD:
+		case ID_USB_KEYBOARD:
 			if (s_isSwitchedPort)
 			{
 				SendKeyboardToUsb(pData, KEYBOARD_LEN);
@@ -109,7 +109,7 @@ void ProcessUartData(void)
 			
 			break;
 
-		case ID_MOUSE:
+		case ID_USB_MOUSE:
 			if (s_isSwitchedPort)
 			{
 				SendMouseToUsb(pData, MOUSE_LEN);

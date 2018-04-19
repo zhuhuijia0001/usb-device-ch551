@@ -64,13 +64,15 @@ void RecvBufferOneByte(UINT8 ch)
 	{
 		BOOL validCh = FALSE;
 		
-		if (ch == ID_KEYBOARD)
+		if (ch == ID_USB_KEYBOARD
+			|| ch == ID_PS2_KEYBOARD)
 		{
 			s_left = KEYBOARD_LEN + 1;
 
 			validCh = TRUE;
 		}
-		else if (ch == ID_MOUSE)
+		else if (ch == ID_USB_MOUSE
+				|| ch == ID_PS2_MOUSE)
 		{
 			s_left = MOUSE_LEN + 1;
 
