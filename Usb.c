@@ -344,6 +344,8 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
                         }
                         if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_DEVICE )// Éè±¸
                         {
+                            len = 0xFF;
+                            
 							break;
                         }													
                         else
@@ -445,36 +447,32 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
             break;
             
         case UIS_TOKEN_IN | 0:                                               //endpoint0 IN
-        	if (SetupLen == 0)
-        	{
-				UEP0_T_LEN = 0;                                              //×´Ì¬½×¶ÎÍê³ÉÖÐ¶Ï»òÕßÊÇÇ¿ÖÆÉÏ´«0³¤¶ÈÊý¾Ý°ü½áÊø¿ØÖÆ´«Êä
-	            UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-        	}
-        	else
-        	{
-				switch(SetupReq)
-	            {
-	            case USB_GET_DESCRIPTOR:
-	            case HID_GET_REPORT:
-	                len = SetupLen >= DEFAULT_ENDP0_SIZE ? DEFAULT_ENDP0_SIZE : SetupLen;                          //±¾´Î´«Êä³¤¶È
-	                memcpy(Ep0Buffer, pDescr, len);                              //¼ÓÔØÉÏ´«Êý¾Ý
-	                SetupLen -= len;
-	                pDescr += len;
-	                UEP0_T_LEN = len;
-	                UEP0_CTRL ^= bUEP_T_TOG;                                     //Í¬²½±êÖ¾Î»·­×ª
-	                break;
-	                
-	            case USB_SET_ADDRESS:
-	                USB_DEV_AD = USB_DEV_AD & bUDA_GP_BIT | SetupLen;
-	                UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-	                break;
-	                
-	            default:
-	                UEP0_T_LEN = 0;                                              //×´Ì¬½×¶ÎÍê³ÉÖÐ¶Ï»òÕßÊÇÇ¿ÖÆÉÏ´«0³¤¶ÈÊý¾Ý°ü½áÊø¿ØÖÆ´«Êä
-	                UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-	                break;
-	            }
-        	}
+			switch(SetupReq)
+            {
+            case USB_GET_DESCRIPTOR:
+            case HID_GET_REPORT:
+                len = SetupLen >= DEFAULT_ENDP0_SIZE ? DEFAULT_ENDP0_SIZE : SetupLen;                          //±¾´Î´«Êä³¤¶È
+                memcpy(Ep0Buffer, pDescr, len);                              //¼ÓÔØÉÏ´«Êý¾Ý
+                SetupLen -= len;
+                pDescr += len;
+                UEP0_T_LEN = len;
+                UEP0_CTRL ^= bUEP_T_TOG;                                     //Í¬²½±êÖ¾Î»·­×ª
+				if (len < DEFAULT_ENDP0_SIZE)
+				{
+					SetupReq = 0xFF;
+				}
+                break;
+                
+            case USB_SET_ADDRESS:
+                USB_DEV_AD = USB_DEV_AD & bUDA_GP_BIT | SetupLen;
+                UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
+                break;
+                
+            default:
+                UEP0_T_LEN = 0;                                              //×´Ì¬½×¶ÎÍê³ÉÖÐ¶Ï»òÕßÊÇÇ¿ÖÆÉÏ´«0³¤¶ÈÊý¾Ý°ü½áÊø¿ØÖÆ´«Êä
+                UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
+                break;
+            }
             
             break;
         case UIS_TOKEN_OUT | 0:  // endpoint0 OUT
