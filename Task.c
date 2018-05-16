@@ -15,7 +15,6 @@
 #include "Packet.h"
 
 #define OUT_BUFFER_SIZE  8
-static UINT8X s_sendBuffer[OUT_BUFFER_SIZE];
 
 static BOOL s_isSwitchedPort = FALSE;
 
@@ -63,7 +62,7 @@ void InitSystem(void)
 	
     InitUART0();         //串口0初始化
 	
-	InitTimer2(5);       //5ms 中断
+	InitTimer2(4);       //4ms 中断
 
 #ifdef DEBUG
 	Port1Cfg(6, 1);
@@ -73,7 +72,7 @@ void InitSystem(void)
     USBDeviceInit();     //USB设备模式初始化
 
 #ifndef DEBUG
-	CH554WDTModeSelect(1);
+	//CH554WDTModeSelect(1);
 #endif
 
     HAL_ENABLE_INTERRUPTS();    //允许单片机中断
@@ -95,10 +94,9 @@ void ProcessUartData(void)
 	if (CheckRecvBuffer())
 	{
 		UINT8 *packet = GetOutputBuffer();
-		
-		UINT8 id = packet[0];
-		UINT8 *pData = &packet[1];
 
+		UINT8 id = packet[0];
+		UINT8 *pData = &packet[1];   
 		switch (id)
 		{
 		case ID_USB_KEYBOARD:
@@ -121,6 +119,9 @@ void ProcessUartData(void)
 			{
 				UINT8 online;
 				UINT8 len;
+
+				
+                UINT8 buffer[OUT_BUFFER_SIZE];
 #ifdef DEBUG
 				P1_6 = !P1_6;
 #endif
@@ -133,9 +134,9 @@ void ProcessUartData(void)
 					online = STATUS_OFFLINE;
 				}
 
-				if (BuildOnlineStatusPacket(s_sendBuffer, sizeof(s_sendBuffer), &len, online))
+				if (BuildOnlineStatusPacket(buffer, sizeof(buffer), &len, online))
 				{
-					CH554UART0SendData(s_sendBuffer, len);
+				    CH554UART0SendData(buffer, len);
 				}	
 			}
 
@@ -164,24 +165,27 @@ void ProcessUartData(void)
 	}
 }
 
-void ProcessKeyboardLed()
-{
-	static UINT8 ledSave = 0x00;
-	
+void ProcessKeyboardLed(void)
+{	
+    static UINT8 ledSave = 0x00;
+    
 	UINT8 led = GetKeyboardLedStatus();
+
 	if (led != ledSave)
 	{
-		if (s_isSwitchedPort)
+		//if (s_isSwitchedPort)
 		{
 			UINT8 len;
-			if (BuildKeyboardLedPacket(s_sendBuffer, sizeof(s_sendBuffer), &len, led))
+			UINT8 buffer[OUT_BUFFER_SIZE];
+			
+			if (BuildKeyboardLedPacket(buffer, sizeof(buffer), &len, led))
 			{
-				CH554UART0SendData(s_sendBuffer, len);
+				CH554UART0SendData(buffer, len);
 			}
 		}
 
-		ledSave = led;
-
+        ledSave = led;
+        
 #ifdef DEBUG 
 
 		if (led & 0x02)
@@ -199,7 +203,7 @@ void ProcessKeyboardLed()
 #ifndef DEBUG
 void FeedWdt(void)
 {
-	CH554WDTFeed(0);
+	//CH554WDTFeed(0);
 }
 
 #else

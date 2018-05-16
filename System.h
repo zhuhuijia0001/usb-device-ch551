@@ -28,16 +28,17 @@
 #ifndef  DE_PRINTF
 #define  DE_PRINTF     0
 #endif
-#define	 FREQ_SYS	     12000000	         //系统主频12MHz
+#define	 FREQ_SYS	     16000000ul	         //系统主频12MHz
 #ifndef  UART0_BUAD
-#define  UART0_BUAD    57600UL
-#define  UART1_BUAD    57600UL
+#define  UART0_BUAD    100000ul
+#define  UART1_BUAD    57600ul
 #endif
 
-void	CfgFsys( );                        //CH554时钟选择和配置
-void	mDelayuS( UINT16 n );              // 以uS为单位延时
-void	mDelaymS( UINT16 n );              // 以mS为单位延时
+void CfgFsys( );                        //CH554时钟选择和配置
+void mDelayuS( UINT16 n );              // 以uS为单位延时
+void mDelaymS( UINT16 n );              // 以mS为单位延时
 
 void CH554WDTModeSelect(UINT8 mode);     //CH554看门狗模式设置 
 void CH554WDTFeed(UINT8 tim);            //CH554看门狗喂狗
 #endif
+

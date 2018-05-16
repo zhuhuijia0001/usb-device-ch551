@@ -4,7 +4,7 @@
 #include "RecvBuffer.h"
 #include "Uart.h"
 
-void Uart0Isr(void) interrupt INT_NO_UART0 using 0
+void Uart0Isr(void) interrupt INT_NO_UART0 using 1
 {	
 	if (RI)
 	{

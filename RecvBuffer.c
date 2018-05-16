@@ -1,6 +1,9 @@
 #include "Type.h"
+
 #include "Protocol.h"
 #include "RecvBuffer.h"
+
+#include "Ch552.h"
 
 //buffer struct
 typedef struct _BUFFER_STRUCT
@@ -35,14 +38,14 @@ typedef enum
 } RECV_STATE;
 
 //max interval
-#define BYTE_INTERVAL    2
+#define BYTE_INTERVAL    5
 
 static UINT8 volatile s_sum = 0;
 
 static UINT8 volatile s_left = 0;
 static RECV_STATE volatile s_recvState = RECV_STATE_IDLE;
 
-BOOL RecvBufferTimerout(void)
+void RecvBufferTimerout(void) using 2
 {
 	if (s_recvStruct.TimerCounter > 0)
 	{
@@ -50,16 +53,12 @@ BOOL RecvBufferTimerout(void)
 		if (s_recvStruct.TimerCounter == 0)
 		{
 			s_recvState = RECV_STATE_IDLE;
-			
-			return TRUE;
 		}
 	}
-
-	return FALSE;
 }
 
-void RecvBufferOneByte(UINT8 ch)
-{
+void RecvBufferOneByte(UINT8 ch) using 1
+{   
 	if (s_recvState == RECV_STATE_IDLE)
 	{
 		BOOL validCh = FALSE;
@@ -80,8 +79,8 @@ void RecvBufferOneByte(UINT8 ch)
 		}
 		else if (ch == ID_QUERY_ONLINE)
 		{
-			s_left = 1;
-
+			s_left = ONLINE_LEN + 1;
+            
 			validCh = TRUE;
 		}
 		else if (ch == ID_SWITCH)
@@ -137,6 +136,8 @@ void InitRecvBuffer(void)
 	s_recvStruct.RecvBuffer.pBufferEnd   = s_buffer + sizeof(s_buffer);
 	s_recvStruct.RecvBuffer.pBufferIn    = s_buffer;
 	s_recvStruct.RecvBuffer.pBufferOut   = s_buffer;
+	s_recvStruct.RecvBuffer.BlockSize    = BUFFER_BLOCK_SIZE;
+	
 	s_recvStruct.RPtr                    = 0;
 
 	s_recvStruct.TimerCounter            = 0;
@@ -155,7 +156,7 @@ UINT8 *GetOutputBuffer(void)
 	{
 		s_recvStruct.RecvBuffer.pBufferOut = s_recvStruct.RecvBuffer.pBufferStart;
 	}
-
+    
 	return p;
 }
 

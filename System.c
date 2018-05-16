@@ -13,6 +13,8 @@
 #include "Type.h"
 #include "Ch552.h"
 
+#include "System.h"
+
 /*******************************************************************************
 * Function Name  : CfgFsys( )
 * Description    : CH554时钟选择和配置函数,默认使用Fsys 6MHz，FREQ_SYS可以通过
@@ -32,15 +34,28 @@ void	CfgFsys( )
 #endif	  
 		SAFE_MOD = 0x55;
 		SAFE_MOD = 0xAA;
-// 		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x07;  // 32MHz	
-// 		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x06;  // 24MHz	
-// 		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x05;  // 16MHz	
-		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x04;  // 12MHz
-// 		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x03;  // 6MHz	
-// 		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x02;  // 3MHz	
-// 		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x01;  // 750KHz	
-// 		CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x00;  // 187.5MHz		
-		SAFE_MOD = 0x00;
+
+#if FREQ_SYS == 32000000ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x07;  // 32MHz
+#elif FREQ_SYS == 24000000ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x06;  // 24MHz
+#elif FREQ_SYS == 16000000ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x05;  // 16MHz
+#elif FREQ_SYS == 12000000ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x04;  // 12MHz
+#elif FREQ_SYS == 6000000ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x03;  // 6MHz
+#elif FREQ_SYS == 3000000ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x02;  // 3MHz
+#elif FREQ_SYS == 750000ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x01;  // 750KHz
+#elif FREQ_SYS == 187500ul
+    CLOCK_CFG = CLOCK_CFG & ~ MASK_SYS_CK_SEL | 0x00;  // 187.5MHz
+#else
+#error "invalid freq"
+#endif
+
+    SAFE_MOD = 0x00;
 }
 
 /*******************************************************************************
