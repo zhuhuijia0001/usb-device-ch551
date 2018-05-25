@@ -27,6 +27,10 @@
 #define STATUS_ONLINE 1
 #define STATUS_OFFLINE 0
 
+//query type 
+#define QUERY_CURRENT_PORT  1
+#define QUERY_OTHER_PORT    0
+
 //switch
 #define SWITCH_IN     1
 #define SWITCH_OUT    0

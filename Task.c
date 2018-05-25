@@ -16,7 +16,7 @@
 
 #define OUT_BUFFER_SIZE  8
 
-static BOOL s_isSwitchedPort = FALSE;
+static BOOL s_isSwitchedPort = TRUE;
 
 //keyboard break code
 static UINT8C s_keyboardBreakCode[KEYBOARD_LEN] = 
@@ -72,7 +72,7 @@ void InitSystem(void)
     USBDeviceInit();     //USB设备模式初始化
 
 #ifndef DEBUG
-	//CH554WDTModeSelect(1);
+	CH554WDTModeSelect(1);
 #endif
 
     HAL_ENABLE_INTERRUPTS();    //允许单片机中断
@@ -91,7 +91,7 @@ void ProcessUartData(void)
 	}
 #endif
 
-	if (CheckRecvBuffer())
+	if (!IsRecvBufferEmpty())
 	{
 		UINT8 *packet = GetOutputBuffer();
 
@@ -138,6 +138,16 @@ void ProcessUartData(void)
 				{
 				    CH554UART0SendData(buffer, len);
 				}	
+
+				if (pData[0] == QUERY_CURRENT_PORT)
+				{
+                    UINT8 led = GetKeyboardLedStatus();
+                                
+                    if (BuildKeyboardLedPacket(buffer, sizeof(buffer), &len, led))
+                    {
+                        CH554UART0SendData(buffer, len);
+                    }
+                }
 			}
 
 			break;
@@ -173,7 +183,7 @@ void ProcessKeyboardLed(void)
 
 	if (led != ledSave)
 	{
-		//if (s_isSwitchedPort)
+		if (s_isSwitchedPort)
 		{
 			UINT8 len;
 			UINT8 buffer[OUT_BUFFER_SIZE];
@@ -203,7 +213,7 @@ void ProcessKeyboardLed(void)
 #ifndef DEBUG
 void FeedWdt(void)
 {
-	//CH554WDTFeed(0);
+	CH554WDTFeed(0);
 }
 
 #else

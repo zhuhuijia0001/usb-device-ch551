@@ -143,9 +143,9 @@ void InitRecvBuffer(void)
 	s_recvStruct.TimerCounter            = 0;
 }
 
-BOOL CheckRecvBuffer(void)
+BOOL IsRecvBufferEmpty(void)
 {
-	return s_recvStruct.RecvBuffer.pBufferIn != s_recvStruct.RecvBuffer.pBufferOut;
+	return s_recvStruct.RecvBuffer.pBufferIn == s_recvStruct.RecvBuffer.pBufferOut;
 }
 
 UINT8 *GetOutputBuffer(void)
