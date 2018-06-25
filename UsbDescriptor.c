@@ -139,8 +139,8 @@ static UINT8C _CfgDesc[] =
     0x01,                 /*bConfigurationValue: Configuration value*/
     0x00,                 /*iConfiguration: Index of string descriptor describing
                                      the configuration*/
-    0xC0,                 /*bmAttributes: self powered */
-    0x32,                 /*MaxPower 100 mA: this current is used for detecting Vbus*/
+    0x80 | (1 << 6) | (1 << 5), /*bmAttributes: self powered, remote wakeup */
+    100 / 2,                 /*MaxPower 100 mA: this current is used for detecting Vbus*/
 
     /************** Descriptor of keyboard interface ****************/
     0x09,                 /*bLength: Interface Descriptor size*/

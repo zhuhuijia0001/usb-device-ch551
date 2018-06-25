@@ -12,6 +12,8 @@ extern UINT8 GetKeyboardLedStatus(void);
 
 extern BOOL CheckEnumerationStatus(void);
 
+extern BOOL CheckPCSleeped(void);
+
 extern void Enp1IntIn(UINT8 *dat, UINT8 size);
 
 extern void Enp2IntIn(UINT8 *dat, UINT8 size);

@@ -16,6 +16,9 @@ static UINT8X  Ep0Buffer[8>(THIS_ENDP0_SIZE+2)?8:(THIS_ENDP0_SIZE+2)] _at_ 0x000
 static UINT8X  Ep1Buffer[64>(MAX_PACKET_SIZE+2)?64:(MAX_PACKET_SIZE+2)] _at_ 0x000a;  //¶Ëµã1 IN»º³åÇø,±ØÐëÊÇÅ¼µØÖ·
 static UINT8X  Ep2Buffer[64>(MAX_PACKET_SIZE+2)?64:(MAX_PACKET_SIZE+2)] _at_ 0x0050;  //¶Ëµã2 IN»º³åÇø,±ØÐëÊÇÅ¼µØÖ·
 static UINT8   SetupReq,SetupLen,UsbConfig;
+
+static BOOL    PCSleeped = FALSE;
+
 static BOOL    Ready = FALSE;
 
 static PUINT8  pDescr;    
@@ -152,7 +155,20 @@ UINT8 GetKeyboardLedStatus()
 
 BOOL CheckEnumerationStatus()
 {
-	return Ready;
+    BOOL ready;
+
+	HAL_CRITICAL_STATEMENT(ready = Ready);
+
+	return ready;
+}
+
+BOOL CheckPCSleeped()
+{
+    BOOL sleeped;
+
+	HAL_CRITICAL_STATEMENT(sleeped = PCSleeped);
+
+	return sleeped;
 }
 
 /*******************************************************************************
@@ -342,6 +358,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
                                 break;
                             }
                         }
+                        
                         if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_DEVICE )// Éè±¸
                         {
                             len = 0xFF;
@@ -362,6 +379,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
                                 if( CfgDesc.descr[ 7 ] & 0x20 )
                                 {
                                     /* ÉèÖÃ»½ÐÑÊ¹ÄÜ±êÖ¾ */
+                                    PCSleeped = TRUE;
                                 }
                                 else
                                 {
@@ -500,11 +518,13 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
         UIF_TRANSFER = 0;
         UIF_BUS_RST = 0;                                                 //ÇåÖÐ¶Ï±êÖ¾
     }
+    
     if (UIF_SUSPEND)                                                     //USB×ÜÏß¹ÒÆð/»½ÐÑÍê³É
     {
         UIF_SUSPEND = 0;
         if ( USB_MIS_ST & bUMS_SUSPEND )                                 //¹ÒÆð
         {
+            //suspend
             //TRACE( "zz" );                                              //Ë¯Ãß×´Ì¬
 //          while ( XBUS_AUX & bUART0_TX );                              //µÈ´ý·¢ËÍÍê³É
 //          SAFE_MOD = 0x55;
@@ -515,10 +535,19 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
 //          SAFE_MOD = 0xAA;
 //          WAKE_CTRL = 0x00;
 
-			Ready = FALSE;
+            if (!PCSleeped)
+            {
+			    Ready = FALSE;
+			}
+        }
+        else
+        {
+            //resume
+            PCSleeped = FALSE;
         }
     }
-    else {                                                               //ÒâÍâµÄÖÐ¶Ï,²»¿ÉÄÜ·¢ÉúµÄÇé¿ö
+    else 
+    {                                                               //ÒâÍâµÄÖÐ¶Ï,²»¿ÉÄÜ·¢ÉúµÄÇé¿ö
         USB_INT_FG = 0xFF;                                               //ÇåÖÐ¶Ï±êÖ¾
 //      TRACE("UnknownInt  N");
     }

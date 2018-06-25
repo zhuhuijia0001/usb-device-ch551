@@ -102,6 +102,11 @@ void ProcessUartData(void)
 		case ID_USB_KEYBOARD:
 			if (s_isSwitchedPort)
 			{
+			    if (CheckPCSleeped())
+			    {
+                    CH554USBDevWakeup();
+			    }
+			    
 				SendKeyboardToUsb(pData, KEYBOARD_LEN);
 			}
 			
@@ -110,6 +115,15 @@ void ProcessUartData(void)
 		case ID_USB_MOUSE:
 			if (s_isSwitchedPort)
 			{
+			    if (CheckPCSleeped())
+			    {
+                    if (pData[0] != 0x00)
+                    {
+                        //only mouse button wakeup pc
+                        CH554USBDevWakeup();
+                    }
+			    }
+			    
 				SendMouseToUsb(pData, MOUSE_LEN);
 			}
 			
