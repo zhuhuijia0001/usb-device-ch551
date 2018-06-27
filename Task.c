@@ -81,7 +81,7 @@ void InitSystem(void)
 void ProcessUartData(void)
 {
 #ifdef DEBUG
-	if (CheckEnumerationStatus())
+	if (CheckPCReady())
 	{
 		P1_6 = 1;
 	}
@@ -99,33 +99,37 @@ void ProcessUartData(void)
 		UINT8 *pData = &packet[1];   
 		switch (id)
 		{
-		case ID_USB_KEYBOARD:
-			if (s_isSwitchedPort)
-			{
-			    if (CheckPCSleeped())
-			    {
-                    CH554USBDevWakeup();
-			    }
-			    
-				SendKeyboardToUsb(pData, KEYBOARD_LEN);
-			}
+		case ID_USB_KEYBOARD:			
+		    if (!CheckPCReady())
+		    {
+                break;
+		    }
+		    
+		    if (CheckPCSleeped())
+		    {
+                CH554USBDevWakeup();
+		    }
+
+			SendKeyboardToUsb(pData, KEYBOARD_LEN);
 			
 			break;
 
 		case ID_USB_MOUSE:
-			if (s_isSwitchedPort)
-			{
-			    if (CheckPCSleeped())
-			    {
-                    if (pData[0] != 0x00)
-                    {
-                        //only mouse button wakeup pc
-                        CH554USBDevWakeup();
-                    }
-			    }
-			    
-				SendMouseToUsb(pData, MOUSE_LEN);
-			}
+		    if (!CheckPCReady())
+		    {
+                break;
+		    }
+		    
+		    if (CheckPCSleeped())
+		    {
+                if (pData[0] != 0x00)
+                {
+                    //only mouse button wakeup pc
+                    CH554USBDevWakeup();
+                }
+		    }
+		    
+			SendMouseToUsb(pData, MOUSE_LEN);
 			
 			break;
 
@@ -139,7 +143,7 @@ void ProcessUartData(void)
 #ifdef DEBUG
 				P1_6 = !P1_6;
 #endif
-				if (CheckEnumerationStatus())
+				if (CheckPCReady())
 				{
 					online = STATUS_ONLINE;
 				}
@@ -161,6 +165,12 @@ void ProcessUartData(void)
                     {
                         CH554UART0SendData(buffer, len);
                     }
+
+                    s_isSwitchedPort = TRUE;
+                }
+                else 
+                {
+                    s_isSwitchedPort = FALSE;
                 }
 			}
 
@@ -169,16 +179,26 @@ void ProcessUartData(void)
 		case ID_SWITCH:
 			if (pData[0] == SWITCH_IN)
 			{
-				s_isSwitchedPort = TRUE;
+			    UINT8 len;
+
+                UINT8 buffer[OUT_BUFFER_SIZE];
+
+                UINT8 led = GetKeyboardLedStatus();
+                            
+                if (BuildKeyboardLedPacket(buffer, sizeof(buffer), &len, led))
+                {
+                    CH554UART0SendData(buffer, len);
+                }
 			}
 			else
 			{
-				s_isSwitchedPort = FALSE;
-
 				//send break code
-				SendKeyboardToUsb(s_keyboardBreakCode, KEYBOARD_LEN);
+				if (CheckPCReady())
+			    {
+                    SendKeyboardToUsb(s_keyboardBreakCode, KEYBOARD_LEN);
 
-				SendMouseToUsb(s_mouseBreakCode, MOUSE_LEN);
+				    SendMouseToUsb(s_mouseBreakCode, MOUSE_LEN);
+			    }
 			}
 			
 			break;

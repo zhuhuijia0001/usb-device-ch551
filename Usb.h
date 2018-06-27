@@ -10,9 +10,11 @@ extern void USBDeviceInit(void);
 
 extern UINT8 GetKeyboardLedStatus(void);
 
-extern BOOL CheckEnumerationStatus(void);
+extern BOOL CheckPCReady(void);
 
 extern BOOL CheckPCSleeped(void);
+
+extern void SetPCSleeped(BOOL sleeped);
 
 extern void Enp1IntIn(UINT8 *dat, UINT8 size);
 

@@ -153,13 +153,18 @@ UINT8 GetKeyboardLedStatus()
 	return led;
 }
 
-BOOL CheckEnumerationStatus()
+BOOL CheckPCReady()
 {
     BOOL ready;
 
 	HAL_CRITICAL_STATEMENT(ready = Ready);
 
 	return ready;
+}
+
+void SetPCSleeped(BOOL sleeped)
+{    
+    HAL_CRITICAL_STATEMENT(PCSleeped = sleeped);
 }
 
 BOOL CheckPCSleeped()
@@ -372,7 +377,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
                         break;
                         
                     case USB_SET_FEATURE:                                              /* Set Feature */
-                        if( ( UsbSetupBuf->bRequestType & 0x1F ) == 0x00 )             /* ÉèÖÃÉè±¸ */
+                        if( ( UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_DEVICE )             /* ÉèÖÃÉè±¸ */
                         {
                             if( ( ( ( UINT16 )UsbSetupBuf->wValueH << 8 ) | UsbSetupBuf->wValueL ) == 0x01 )
                             {
@@ -391,7 +396,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
                                 len = 0xFF;                                            /* ²Ù×÷Ê§°Ü */
                             }
                         }
-                        else if( ( UsbSetupBuf->bRequestType & 0x1F ) == 0x02 )        /* ÉèÖÃ¶Ëµã */
+                        else if( ( UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )        /* ÉèÖÃ¶Ëµã */
                         {
                             if( ( ( ( UINT16 )UsbSetupBuf->wValueH << 8 ) | UsbSetupBuf->wValueL ) == 0x00 )
                             {
