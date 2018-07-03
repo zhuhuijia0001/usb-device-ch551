@@ -14,5 +14,10 @@
 #define OFFSET_PIN_LED2   7
 #define PIN_LED2          MAKE_GPIO(PORT_PIN_LED2, OFFSET_PIN_LED2)
 
+/* usb power pin */
+#define PORT_PIN_USB_POWER    3
+#define OFFSET_PIN_USB_POWER  4
+#define PIN_USB_POWER         MAKE_GPIO(PORT_PIN_USB_POWER, OFFSET_PIN_USB_POWER)
+
 #endif
 

@@ -1,6 +1,8 @@
 
 #include "Type.h"
 #include "Mcu.h"
+#include "PinDefine.h"
+
 #include "Protocol.h"
 #include "RecvBuffer.h"
 #include "Task.h"
@@ -16,7 +18,8 @@
 
 #define OUT_BUFFER_SIZE  8
 
-static BOOL s_isSwitchedPort = TRUE;
+//whether it is the switched port
+static BOOL s_isSwitchedPort = FALSE;
 
 //keyboard break code
 static UINT8C s_keyboardBreakCode[KEYBOARD_LEN] = 
@@ -69,6 +72,8 @@ void InitSystem(void)
 	Port1Cfg(7, 1);
 #endif
 
+    Port3Cfg(4, GPIO_Mode_IN_Floating);
+    
     USBDeviceInit();     //USB设备模式初始化
 
 #ifndef DEBUG
@@ -143,7 +148,7 @@ void ProcessUartData(void)
 #ifdef DEBUG
 				P1_6 = !P1_6;
 #endif
-				if (CheckPCReady())
+				if (GET_GPIO_BIT(PIN_USB_POWER))
 				{
 					online = STATUS_ONLINE;
 				}

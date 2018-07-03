@@ -209,10 +209,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>48</ColumnNumber>
+      <ColumnNumber>27</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>51</TopLine>
-      <CurrentLine>70</CurrentLine>
+      <TopLine>52</TopLine>
+      <CurrentLine>63</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Task.c</PathWithFileName>
       <FilenameWithoutPath>Task.c</FilenameWithoutPath>
@@ -1907,9 +1907,9 @@
       <Documents>
         <Doc>
           <Name>.\Task.c</Name>
-          <ColumnNumber>48</ColumnNumber>
-          <TopLine>51</TopLine>
-          <CurrentLine>70</CurrentLine>
+          <ColumnNumber>27</ColumnNumber>
+          <TopLine>52</TopLine>
+          <CurrentLine>63</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\RecvBuffer.c</Name>

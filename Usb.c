@@ -5,6 +5,8 @@
 #include "Ch552.h"
 #include "Mcu.h"
 
+#include "PinDefine.h"
+
 #include "System.h"
 #include "UsbDef.h"
 #include "Usb.h"
@@ -540,7 +542,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
 //          SAFE_MOD = 0xAA;
 //          WAKE_CTRL = 0x00;
 
-            if (!PCSleeped)
+            if (!GET_GPIO_BIT(PIN_USB_POWER))
             {
 			    Ready = FALSE;
 			}
