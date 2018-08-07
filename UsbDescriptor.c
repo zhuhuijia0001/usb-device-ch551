@@ -48,19 +48,20 @@ static UINT8C _KeyRepDesc[] =
 	0x81, 0x02,         /*      Input (Variable),               */
 	0x95, 0x01,         /*      Report Count (1),               */
 	0x75, 0x08,         /*      Report Size (8),                */
-	0x81, 0x01,         /*      Input (Constant),               */
-	0x95, 0x03,         /*      Report Count (3),               */
+	0x81, 0x03,         /*      Input (Constant),               */
+	0x95, 0x05,         /*      Report Count (5),               */
 	0x75, 0x01,         /*      Report Size (1),                */
 	0x05, 0x08,         /*      Usage Page (LED),               */
 	0x19, 0x01,         /*      Usage Minimum (01h),            */
-	0x29, 0x03,         /*      Usage Maximum (03h),            */
+	0x29, 0x05,         /*      Usage Maximum (05h),            */
 	0x91, 0x02,         /*      Output (Variable),              */
-	0x95, 0x05,         /*      Report Count (5),               */
-	0x75, 0x01,         /*      Report Size (1),                */
-	0x91, 0x01,         /*      Output (Constant),              */
+	0x95, 0x01,         /*      Report Count (1),               */
+	0x75, 0x03,         /*      Report Size (3),                */
+	0x91, 0x03,         /*      Output (Constant),              */
 	0x95, 0x06,         /*      Report Count (6),               */
 	0x75, 0x08,         /*      Report Size (8),                */
-	0x26, 0xFF, 0x00,   /*      Logical Maximum (255),          */
+	0x15, 0x00,         /*      Logical Minimum(0)              */
+	0x25, 0xFF,         /*      Logical Maximum (255),          */
 	0x05, 0x07,         /*      Usage Page (Keyboard),          */
 	0x19, 0x00,         /*      Usage Minimum (None),           */
 	0x29, 0x91,         /*      Usage Maximum (KB LANG2),       */

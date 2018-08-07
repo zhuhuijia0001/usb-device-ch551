@@ -184,6 +184,7 @@ void ProcessUartData(void)
 		case ID_SWITCH:
 			if (pData[0] == SWITCH_IN)
 			{
+				//switch in
 			    UINT8 len;
 
                 UINT8 buffer[OUT_BUFFER_SIZE];
@@ -197,8 +198,9 @@ void ProcessUartData(void)
 			}
 			else
 			{
+				//switch out
 				//send break code
-				if (CheckPCReady())
+				if (CheckPCReady() && !CheckPCSleeped())
 			    {
                     SendKeyboardToUsb(s_keyboardBreakCode, KEYBOARD_LEN);
 
