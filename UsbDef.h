@@ -159,7 +159,7 @@ extern "C" {
 #define DEFAULT_ENDP0_SIZE      8       /* default maximum packet size for endpoint 0 */
 #endif
 #ifndef MAX_PACKET_SIZE
-#define MAX_PACKET_SIZE         64      /* maximum packet size */
+#define MAX_PACKET_SIZE         8       /* maximum packet size */
 #endif
 #ifndef USB_BO_CBW_SIZE
 #define USB_BO_CBW_SIZE			0x1F	/* 命令块CBW的总长度 */
