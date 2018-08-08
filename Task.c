@@ -104,34 +104,20 @@ void ProcessUartData(void)
 		UINT8 *pData = &packet[1];   
 		switch (id)
 		{
-		case ID_USB_KEYBOARD:			
-		    if (!CheckPCReady())
+		case ID_USB_KEYBOARD:					    
+		    if (CheckPCReady() && CheckPCSleeped())
 		    {
-                break;
-		    }
-		    
-		    if (CheckPCSleeped())
-		    {
-                CH554USBDevWakeup();
+				CH554USBDevWakeup();
 		    }
 
 			SendKeyboardToUsb(pData, KEYBOARD_LEN);
 			
 			break;
 
-		case ID_USB_MOUSE:
-		    if (!CheckPCReady())
+		case ID_USB_MOUSE:		    
+		    if (CheckPCReady() && CheckPCSleeped())
 		    {
-                break;
-		    }
-		    
-		    if (CheckPCSleeped())
-		    {
-                if (pData[0] != 0x00)
-                {
-                    //only mouse button wakeup pc
-                    CH554USBDevWakeup();
-                }
+                CH554USBDevWakeup();
 		    }
 		    
 			SendMouseToUsb(pData, MOUSE_LEN);
@@ -200,7 +186,7 @@ void ProcessUartData(void)
 			{
 				//switch out
 				//send break code
-				if (CheckPCReady() && !CheckPCSleeped())
+				if (!CheckPCSleeped())
 			    {
                     SendKeyboardToUsb(s_keyboardBreakCode, KEYBOARD_LEN);
 

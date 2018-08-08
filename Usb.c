@@ -277,6 +277,10 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                         case USB_DESCR_TYP_DEVICE:                          //…Ë±∏√Ë ˆ∑˚
                             pDescr = DevDesc.descr;                               //∞—…Ë±∏√Ë ˆ∑˚ÀÕµΩ“™∑¢ÀÕµƒª∫≥Â«¯
                             len = DevDesc.size;
+
+							//restart enumeration
+                            Ready = FALSE;
+                            
                             break;
                             
                         case USB_DESCR_TYP_CONFIG:                          //≈‰÷√√Ë ˆ∑˚
@@ -366,7 +370,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                             }
                         }
                         
-                        if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_DEVICE )// …Ë±∏
+                        if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_DEVICE )// ËÆæÂ§á
                         {
                             len = 0xFF;
                             
@@ -374,8 +378,9 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                         }													
                         else
                         {
-                            len = 0xFF;                                                // ≤ª «∂Àµ„≤ª÷ß≥÷
+                            len = 0xFF;                                                // ‰∏çÊòØÁ´ØÁÇπ‰∏çÊîØÊåÅ
                         }
+                        
                         break;
                         
                     case USB_SET_FEATURE:                                              /* Set Feature */
