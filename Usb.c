@@ -121,6 +121,9 @@ void USBDeviceInit()
 	IE_USB = 0;
 	USB_CTRL = 0x00;                                                           // ÏÈÉè¶¨USBÉè±¸Ä£Ê½
 
+	USB_CTRL &= ~bUC_LOW_SPEED;
+    UDEV_CTRL &= ~bUD_LOW_SPEED; 
+    
 	UEP0_DMA = (UINT16)Ep0Buffer;                                                      //¶Ëµã0Êý¾Ý´«ÊäµØÖ·
 	UEP4_1_MOD &= ~(bUEP4_RX_EN | bUEP4_TX_EN);                                //¶Ëµã0µ¥64×Ö½ÚÊÕ·¢»º³åÇø
 	UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;                                 //OUTÊÂÎñ·µ»ØACK£¬INÊÂÎñ·µ»ØNAK
@@ -311,6 +314,12 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USBÖÐ¶Ï·þÎ
                             }
                             break;
 
+						case USB_DESCR_TYP_QUALIF:
+							pDescr = DeviceQualifierCfg.descr;
+                            len = DeviceQualifierCfg.size;
+							
+							break;
+							
                         default:
                             len = 0xFF;                                    //²»Ö§³ÖµÄÃüÁî»òÕß³ö´í
                             break;

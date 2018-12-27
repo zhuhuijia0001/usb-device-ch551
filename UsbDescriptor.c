@@ -221,6 +221,31 @@ const DescriptorData CfgDesc =
     sizeof(_CfgDesc)
 };
 
+/* USB Device Qualifier */
+static UINT8C _USB_DeviceQualifier[] = 
+{
+  	10,             	/* bLength */
+  	USB_DESCR_TYP_QUALIF,	/* bDescriptorType */
+
+	0x00, 0x02, 		  /*bcdUSB */
+
+  	0x00,                              /* bDeviceClass */
+  	0x00,                              /* bDeviceSubClass */
+  	0x00,                              /* bDeviceProtocol */
+  	
+  	DEFAULT_ENDP0_SIZE,                   /* bMaxPacketSize0 */
+  	0x00,                              /* bNumOtherSpeedConfigurations */
+  	0x00                               /* bReserved */
+};
+
+/* device qualifier descriptor */
+const DescriptorData DeviceQualifierCfg = 
+{
+    _USB_DeviceQualifier,
+
+    sizeof(_USB_DeviceQualifier)
+};
+
 #define STRING_LANGID_SIZE          4
 #define STRING_VENDOR_SIZE          12
 #define STRING_PRODUCT_SIZE         22

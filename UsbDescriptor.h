@@ -14,6 +14,9 @@ extern const DescriptorData DevDesc;
 /* configure descriptor */
 extern const DescriptorData CfgDesc;
 
+/* device qualifier descriptor */
+extern const DescriptorData DeviceQualifierCfg;
+
 /* keyboard report descriptor */
 extern const DescriptorData KeyRepDesc;
 
