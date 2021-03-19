@@ -397,7 +397,7 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                         {
                             if( ( ( ( UINT16 )UsbSetupBuf->wValueH << 8 ) | UsbSetupBuf->wValueL ) == 0x01 )
                             {
-                                if( CfgDesc.descr[ 7 ] & 0x20 )
+                                if( (CfgDesc.descr[ 7 ] & 0x20) && Ready )
                                 {
                                     /* …Ë÷√ªΩ–— πƒ‹±Í÷æ */
                                     PCSleeped = TRUE;
