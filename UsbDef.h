@@ -327,6 +327,13 @@ typedef struct _UDISK_BOC_CSW {         /* status of BulkOnly USB-FlashDisk */
 
 typedef UDISK_BOC_CSW xdata *PXUDISK_BOC_CSW;
 
+	
+#define LOW_SPEED_DEVICE        0
+#define FULL_SPEED_DEVICE       1
+	
+#define USB_DEVICE_TYPE         LOW_SPEED_DEVICE
+
+
 #ifdef __cplusplus
 }
 #endif

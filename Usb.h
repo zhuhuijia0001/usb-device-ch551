@@ -12,6 +12,8 @@ extern UINT8 GetKeyboardLedStatus(void);
 
 extern BOOL CheckPCReady(void);
 
+extern void SetPCReady(BOOL ready);
+
 extern BOOL CheckPCSleeped(void);
 
 extern void SetPCSleeped(BOOL sleeped);

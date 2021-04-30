@@ -8,7 +8,13 @@ static UINT8C _DevDesc[] =
 {
 	0x12,                 /*bLength */
 	USB_DESCR_TYP_DEVICE, /*bDescriptorType*/
+#if USB_DEVICE_TYPE == LOW_SPEED_DEVICE
+	0x10, 0x01,           /*bcdUSB */
+#elif USB_DEVICE_TYPE == FULL_SPEED_DEVICE
 	0x00, 0x02,           /*bcdUSB */
+#else
+	#error "usb device type error"
+#endif
 	0x00,                 /*bDeviceClass*/
 	0x00,                 /*bDeviceSubClass*/
 	0x00,                 /*bDeviceProtocol*/

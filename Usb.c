@@ -53,9 +53,18 @@ void CH554SoftReset()
 *******************************************************************************/
 void CH554USBDevWakeup()
 {
-  UDEV_CTRL |= bUD_LOW_SPEED;
-  mDelaymS(2);
-  UDEV_CTRL &= ~bUD_LOW_SPEED;	
+#if USB_DEVICE_TYPE == LOW_SPEED_DEVICE
+	UDEV_CTRL &= ~bUD_LOW_SPEED;
+	mDelaymS(2);
+	UDEV_CTRL |= bUD_LOW_SPEED;
+
+#elif USB_DEVICE_TYPE == FULL_SPEED_DEVICE
+	UDEV_CTRL |= bUD_LOW_SPEED;
+	mDelaymS(2);
+	UDEV_CTRL &= ~bUD_LOW_SPEED;
+#else
+	#error "usb device type error"
+#endif
 }
 
 static UINT8 HexToAscii(UINT8 hex)
@@ -120,10 +129,18 @@ void USBDeviceInit()
 	
 	IE_USB = 0;
 	USB_CTRL = 0x00;                                                           // œ»…Ë∂®USB…Ë±∏ƒ£ Ω
+	UDEV_CTRL = bUD_PD_DIS;
 
+#if USB_DEVICE_TYPE == LOW_SPEED_DEVICE
+	USB_CTRL |= bUC_LOW_SPEED;
+    UDEV_CTRL |= bUD_LOW_SPEED; 
+#elif USB_DEVICE_TYPE == FULL_SPEED_DEVICE
 	USB_CTRL &= ~bUC_LOW_SPEED;
     UDEV_CTRL &= ~bUD_LOW_SPEED; 
-    
+#else
+	#error "usb device type error"
+#endif
+
 	UEP0_DMA = (UINT16)Ep0Buffer;                                                      //∂Àµ„0 ˝æ›¥´ ‰µÿ÷∑
 	UEP4_1_MOD &= ~(bUEP4_RX_EN | bUEP4_TX_EN);                                //∂Àµ„0µ•64◊÷Ω⁄ ’∑¢ª∫≥Â«¯
 	UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;                                 //OUT ¬ŒÒ∑µªÿACK£¨IN ¬ŒÒ∑µªÿNAK
@@ -136,9 +153,8 @@ void USBDeviceInit()
 	UEP2_3_MOD = UEP2_3_MOD & ~bUEP2_BUF_MOD | bUEP2_TX_EN;                    //∂Àµ„2∑¢ÀÕ πƒ‹ 64◊÷Ω⁄ª∫≥Â«¯
 	UEP2_CTRL = bUEP_AUTO_TOG | UEP_T_RES_NAK;                                 //∂Àµ„2◊‘∂Ø∑≠◊™Õ¨≤Ω±Í÷æŒª£¨IN ¬ŒÒ∑µªÿNAK
 		
-	USB_DEV_AD = 0x00;
-	UDEV_CTRL = bUD_PD_DIS;                                                    // Ω˚÷πDP/DMœ¬¿≠µÁ◊Ë
-	USB_CTRL = bUC_DEV_PU_EN | bUC_INT_BUSY | bUC_DMA_EN;                      // ∆Ù∂ØUSB…Ë±∏º∞DMA£¨‘⁄÷–∂œ∆⁄º‰÷–∂œ±Í÷æŒ¥«Â≥˝«∞◊‘∂Ø∑µªÿNAK
+	USB_DEV_AD = 0x00;                                                   // Ω˚÷πDP/DMœ¬¿≠µÁ◊Ë
+	USB_CTRL |= bUC_DEV_PU_EN | bUC_INT_BUSY | bUC_DMA_EN;                      // ∆Ù∂ØUSB…Ë±∏º∞DMA£¨‘⁄÷–∂œ∆⁄º‰÷–∂œ±Í÷æŒ¥«Â≥˝«∞◊‘∂Ø∑µªÿNAK
 	UDEV_CTRL |= bUD_PORT_EN;                                                  // ‘ –ÌUSB∂Àø⁄
 	USB_INT_FG = 0xFF;                                                         // «Â÷–∂œ±Í÷æ
 	USB_INT_EN = bUIE_SUSPEND | bUIE_TRANSFER | bUIE_BUS_RST;
@@ -165,6 +181,11 @@ BOOL CheckPCReady()
 	HAL_CRITICAL_STATEMENT(ready = Ready);
 
 	return ready;
+}
+
+void SetPCReady(BOOL ready)
+{
+	HAL_CRITICAL_STATEMENT(Ready = ready);
 }
 
 void SetPCSleeped(BOOL sleeped)
@@ -387,21 +408,23 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                         }													
                         else
                         {
-                            len = 0xFF;                                                // ‰∏çÊòØÁ´ØÁÇπ‰∏çÊîØÊåÅ
+                            len = 0xFF;                                                // ‰∏çÊòØÁ´ØÁÇπ‰∏çÊîØÊå?
                         }
                         
                         break;
                         
                     case USB_SET_FEATURE:                                              /* Set Feature */
-                        if( ( UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_DEVICE )             /* …Ë÷√…Ë±∏ */
+                        if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_DEVICE)             /* …Ë÷√…Ë±∏ */
                         {
-                            if( ( ( ( UINT16 )UsbSetupBuf->wValueH << 8 ) | UsbSetupBuf->wValueL ) == 0x01 )
+                            if (((( UINT16 )UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL) == 0x01)
                             {
-                                if( (CfgDesc.descr[ 7 ] & 0x20) && Ready )
-                                {
-                                    /* …Ë÷√ªΩ–— πƒ‹±Í÷æ */
-                                    PCSleeped = TRUE;
-                                }
+                            	if (CfgDesc.descr[7] & 0x20)
+                            	{
+									if (Ready)
+									{
+										PCSleeped = TRUE;
+									}
+                            	}
                                 else
                                 {
                                     len = 0xFF;                                        /* ≤Ÿ◊˜ ß∞‹ */
@@ -412,11 +435,11 @@ void UsbIsr(void) interrupt INT_NO_USB using 1                      //USB÷–∂œ∑˛Œ
                                 len = 0xFF;                                            /* ≤Ÿ◊˜ ß∞‹ */
                             }
                         }
-                        else if( ( UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK ) == USB_REQ_RECIP_ENDP )        /* …Ë÷√∂Àµ„ */
+                        else if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_ENDP)        /* …Ë÷√∂Àµ„ */
                         {
-                            if( ( ( ( UINT16 )UsbSetupBuf->wValueH << 8 ) | UsbSetupBuf->wValueL ) == 0x00 )
+                            if ((((UINT16)UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL) == 0x00)
                             {
-                                switch( ( ( UINT16 )UsbSetupBuf->wIndexH << 8 ) | UsbSetupBuf->wIndexL )
+                                switch (((UINT16)UsbSetupBuf->wIndexH << 8) | UsbSetupBuf->wIndexL)
                                 {
                                 case 0x82:
                                     UEP2_CTRL = UEP2_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL;/* …Ë÷√∂Àµ„2 IN STALL */

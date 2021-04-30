@@ -209,7 +209,7 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>29</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>3</TopLine>
       <CurrentLine>18</CurrentLine>
@@ -223,10 +223,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>59</ColumnNumber>
+      <ColumnNumber>4</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>359</TopLine>
-      <CurrentLine>372</CurrentLine>
+      <TopLine>24</TopLine>
+      <CurrentLine>36</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Usb.c</PathWithFileName>
       <FilenameWithoutPath>Usb.c</FilenameWithoutPath>
@@ -1907,7 +1907,7 @@
       <Documents>
         <Doc>
           <Name>.\Task.c</Name>
-          <ColumnNumber>29</ColumnNumber>
+          <ColumnNumber>0</ColumnNumber>
           <TopLine>3</TopLine>
           <CurrentLine>18</CurrentLine>
         </Doc>
@@ -1919,13 +1919,13 @@
         </Doc>
         <Doc>
           <Name>.\Usb.c</Name>
-          <ColumnNumber>59</ColumnNumber>
-          <TopLine>359</TopLine>
-          <CurrentLine>372</CurrentLine>
+          <ColumnNumber>4</ColumnNumber>
+          <TopLine>24</TopLine>
+          <CurrentLine>36</CurrentLine>
         </Doc>
         <Doc>
           <Name>USB.H</Name>
-          <ColumnNumber>9</ColumnNumber>
+          <ColumnNumber>0</ColumnNumber>
           <TopLine>1</TopLine>
           <CurrentLine>12</CurrentLine>
         </Doc>

@@ -105,22 +105,39 @@ void ProcessUartData(void)
 		switch (id)
 		{
 		case ID_USB_KEYBOARD:					    
-		    if (CheckPCReady() && CheckPCSleeped())
+		    if (CheckPCReady())
 		    {
-				CH554USBDevWakeup();
-		    }
+		    	if (CheckPCSleeped())
+		    	{
+			    	UINT8 mouse[4] = { 0x01, 0x00, 0x00, 0x00 };
+			    	
+					CH554USBDevWakeup();
 
-			SendKeyboardToUsb(pData, KEYBOARD_LEN);
+					mDelaymS( 500 );
+
+					SendMouseToUsb(mouse, MOUSE_LEN);
+		    	}
+
+				SendKeyboardToUsb(pData, KEYBOARD_LEN);
+			}
 			
 			break;
 
 		case ID_USB_MOUSE:		    
-		    if (CheckPCReady() && CheckPCSleeped())
+		    if (CheckPCReady())
 		    {
-                CH554USBDevWakeup();
+		    	if (CheckPCSleeped())
+		    	{
+					UINT8 mouse[4] = { 0x01, 0x00, 0x00, 0x00 };
+					CH554USBDevWakeup();
+
+					mDelaymS( 500 );
+
+					SendMouseToUsb(mouse, MOUSE_LEN);
+		    	}
+
+		    	SendMouseToUsb(pData, MOUSE_LEN);
 		    }
-		    
-			SendMouseToUsb(pData, MOUSE_LEN);
 			
 			break;
 
@@ -129,7 +146,6 @@ void ProcessUartData(void)
 				UINT8 online;
 				UINT8 len;
 
-				
                 UINT8 buffer[OUT_BUFFER_SIZE];
 #ifdef DEBUG
 				P1_6 = !P1_6;
@@ -146,7 +162,7 @@ void ProcessUartData(void)
 				if (BuildOnlineStatusPacket(buffer, sizeof(buffer), &len, online))
 				{
 				    CH554UART0SendData(buffer, len);
-				}	
+				}
 
 				if (pData[0] == QUERY_CURRENT_PORT)
 				{
