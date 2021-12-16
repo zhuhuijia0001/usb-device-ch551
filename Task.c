@@ -48,24 +48,24 @@ static void InitTimer2(UINT8 ms)
 {
 	UINT16 val = FREQ_SYS / 1000ul * ms;
 	
-    mTimer2ClkFsys();	           //T2¶¨Ê±Æ÷Ê±ÖÓÉèÖÃ
-    mTimer_x_ModInit(2, 0);         //T2 ¶¨Ê±Æ÷Ä£Ê½ÉèÖÃ
-    mTimer_x_SetData(2, val);	   //T2¶¨Ê±Æ÷¸³Öµ
-    mTimer2RunCTL(1);              //T2¶¨Ê±Æ÷Æô¶¯			
+    mTimer2ClkFsys();	           //T2ï¿½ï¿½Ê±ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    mTimer_x_ModInit(2, 0);         //T2 ï¿½ï¿½Ê±ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½
+    mTimer_x_SetData(2, val);	   //T2ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Öµ
+    mTimer2RunCTL(1);              //T2ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½			
 
     ET2 = 1;
 }
 
 void InitSystem(void)
 {
-    CfgFsys();           //CH551Ê±ÖÓÑ¡ÔñÅäÖÃ
-    mDelaymS(5);         //ÐÞ¸ÄÖ÷ÆµµÈ´ýÄÚ²¿¾§ÕñÎÈ¶¨,±Ø¼Ó	
+    CfgFsys();           //CH551Ê±ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    mDelaymS(5);         //ï¿½Þ¸ï¿½ï¿½ï¿½Æµï¿½È´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¶ï¿½,ï¿½Ø¼ï¿½	
 
 	InitRecvBuffer();
 	
-    InitUART0();         //´®¿Ú0³õÊ¼»¯
+    InitUART0();         //ï¿½ï¿½ï¿½ï¿½0ï¿½ï¿½Ê¼ï¿½ï¿½
 	
-	InitTimer2(4);       //4ms ÖÐ¶Ï
+	InitTimer2(4);       //4ms ï¿½Ð¶ï¿½
 
 #ifdef DEBUG
 	Port1Cfg(6, 1);
@@ -74,13 +74,13 @@ void InitSystem(void)
 
     Port3Cfg(4, GPIO_Mode_IN_Floating);
     
-    USBDeviceInit();     //USBÉè±¸Ä£Ê½³õÊ¼»¯
+    USBDeviceInit();     //USBï¿½è±¸Ä£Ê½ï¿½ï¿½Ê¼ï¿½ï¿½
 
 #ifndef DEBUG
 	CH554WDTModeSelect(1);
 #endif
 
-    HAL_ENABLE_INTERRUPTS();    //ÔÊÐíµ¥Æ¬»úÖÐ¶Ï
+    HAL_ENABLE_INTERRUPTS();    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¬ï¿½ï¿½ï¿½Ð¶ï¿½
 }
 
 void ProcessUartData(void)
@@ -105,39 +105,22 @@ void ProcessUartData(void)
 		switch (id)
 		{
 		case ID_USB_KEYBOARD:					    
-		    if (CheckPCReady())
+		    if (CheckPCReady() && CheckPCSleeped())
 		    {
-		    	if (CheckPCSleeped())
-		    	{
-			    	UINT8 mouse[4] = { 0x01, 0x00, 0x00, 0x00 };
-			    	
-					CH554USBDevWakeup();
+				CH554USBDevWakeup();
+		    }
 
-					mDelaymS( 500 );
-
-					SendMouseToUsb(mouse, MOUSE_LEN);
-		    	}
-
-				SendKeyboardToUsb(pData, KEYBOARD_LEN);
-			}
+			SendKeyboardToUsb(pData, KEYBOARD_LEN);
 			
 			break;
 
 		case ID_USB_MOUSE:		    
-		    if (CheckPCReady())
+		    if (CheckPCReady() && CheckPCSleeped())
 		    {
-		    	if (CheckPCSleeped())
-		    	{
-					UINT8 mouse[4] = { 0x01, 0x00, 0x00, 0x00 };
-					CH554USBDevWakeup();
-
-					mDelaymS( 500 );
-
-					SendMouseToUsb(mouse, MOUSE_LEN);
-		    	}
-
-		    	SendMouseToUsb(pData, MOUSE_LEN);
+                CH554USBDevWakeup();
 		    }
+		    
+			SendMouseToUsb(pData, MOUSE_LEN);
 			
 			break;
 

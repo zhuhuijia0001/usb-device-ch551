@@ -223,10 +223,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>4</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>24</TopLine>
-      <CurrentLine>36</CurrentLine>
+      <TopLine>133</TopLine>
+      <CurrentLine>137</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Usb.c</PathWithFileName>
       <FilenameWithoutPath>Usb.c</FilenameWithoutPath>
@@ -319,7 +319,7 @@
 
   <Group>
     <GroupName>Header</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <File>
@@ -1903,7 +1903,7 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>2</ActiveTab>
+      <ActiveTab>7</ActiveTab>
       <Documents>
         <Doc>
           <Name>.\Task.c</Name>
@@ -1919,9 +1919,9 @@
         </Doc>
         <Doc>
           <Name>.\Usb.c</Name>
-          <ColumnNumber>4</ColumnNumber>
-          <TopLine>24</TopLine>
-          <CurrentLine>36</CurrentLine>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>133</TopLine>
+          <CurrentLine>137</CurrentLine>
         </Doc>
         <Doc>
           <Name>USB.H</Name>
@@ -1934,6 +1934,24 @@
           <ColumnNumber>0</ColumnNumber>
           <TopLine>144</TopLine>
           <CurrentLine>158</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>USBDESCRIPTOR.H</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>PROTOCOL.H</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>USBDEF.H</Name>
+          <ColumnNumber>26</ColumnNumber>
+          <TopLine>310</TopLine>
+          <CurrentLine>332</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>
